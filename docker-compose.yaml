@@ -1,11 +1,27 @@
-version: "3.9"
-
 services:
   backend:
     build: ./backend
-    ports:
-      - "8000:8000"
+    container_name: second_brain_backend
     env_file:
       - ./backend/.env
     volumes:
-      - ./backend/app:/app/app
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: second_brain_db
+    environment:
+      POSTGRES_USER: secondbrain
+      POSTGRES_PASSWORD: secondbrain
+      POSTGRES_DB: secondbrain
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
